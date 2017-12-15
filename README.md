@@ -69,8 +69,7 @@ Column 3: Node types:
 1. Proteomic node
 2. Phenotypic node
 3. Activity (drug coupling) node
-Perturbation biology/network inference tutorial
-www.sanderlab.org/pertbio
+
    3
 Perturbation biology/network inference tutorial
 www.sanderlab.org/pertbio
