@@ -40,19 +40,27 @@ Our network models quantitatively link external perturbations to proteomic entit
 * Nodes:  quantitative measure of molecular & phenotypic species
 * Edges:  influence of one node on the time derivative of the other
 
+![Hopfield network equation](/images/bp_formula.png)
+
 ## Inference problem.
 The inference problem involves finding the optimum {wij} such that the model equations:
 1. Best reproduce a training set of experimental data
 2. Have predictive power beyond the training set
 
 # Compile the source code
-You will need the source code and the variable description files (http://sanderlab.org/pertbio/ )
+You will need the source code and the variable description files (http://sanderlab.org/pertbio/)
 
 * decima_pp.f
 * common.main
 * bp2.main
 
+![source code header](/images/bp_header.png)
 Box 1. The header of the BP-based network inference source code. Compile with the command (for the gfortran compiler h  ttps://gcc.gnu.org/wiki/GFortranBinaries) :
+
+Compile with the command (for the gfortran compiler https://gcc.gnu.org/wiki/GFortranBinaries):
+```
+gfortran decima_pp.f -o decima_bp
+```
 
 # Prepare the input files
 ## node_index.txt
@@ -69,12 +77,9 @@ Column 3: Node types:
 1. Proteomic node
 2. Phenotypic node
 3. Activity (drug coupling) node
-
-   3
-Perturbation biology/network inference tutorial
-www.sanderlab.org/pertbio
       Box 2. Sample lines from the node_index.txt file
-2.2. exp_index.txt
+
+# 2.2. exp_index.txt
 List of experiments (perturbation, drug name, dose).
 Format: 15 characters, 1 integer
 Column 1: Names of the experimental conditions (perturbations/drugs/doses etc). 15 Characters MAX
@@ -113,8 +118,6 @@ NEXPcg= 30 (conjugate gradient optimization steps. Optional. Not used in the cur
 ****************************************************************************
 Box 5. A sample input.txt file
 80 (#models to be generated)
-Perturbation biology/network inference tutorial
-www.sanderlab.org/pertbio
  2.5. Prio.txt
 The PERA generated binary prior informations.
 Format: tab delimited file
