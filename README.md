@@ -77,97 +77,124 @@ Column 3: Node types:
 1. Proteomic node
 2. Phenotypic node
 3. Activity (drug coupling) node
-      Box 2. Sample lines from the node_index.txt file
 
-# 2.2. exp_index.txt
+![sample lines from node index file](/images/box2_node_index.png)
+Box 2. Sample lines from the node_index.txt file
+
+## exp_index.txt
 List of experiments (perturbation, drug name, dose).
 Format: 15 characters, 1 integer
 Column 1: Names of the experimental conditions (perturbations/drugs/doses etc). 15 Characters MAX
 Column 2: (16th column in the exp_index.txt file)
 1: Include the experiment in modeling
-0: Do not include. Column 3: Not used.
+0: Do not include.
+
+![sample lines from exp index file](/images/box3_exp_index.png)
 Box 3. Sample lines from exp_index.txt
-2.3. Data.txt
+
+## Data.txt
 The drug response data.
 Format: tab delimited file of data matrix
 Experimental response map. Each readout is normalized wrt no drug control and in log2. columns: Nodes in the model
 rows: Perturbation conditions
-2.4. Pert.txt
+
+## Pert.txt
 The impact of perturbations (u) on each node.
 Format: tab delimited file of perturbation matrix
 The strengths of the perturbations acting on node
 columns: nodes (measurements on proteins and phenotypes) rows: experimental condition (samples)
-     4
-     NEXPTS=
-NNODES=
-NWVALS=
-Wijmax= 1.00E+00
-THRESH= 1.00E-06 (Convergence criteria in BP iterations)
-89 (Number of perturbation conditions)
-99 (Total number of nodes included in calculations) 11 (number of Wij values allowed)
-lambda= 5.00
-beta= 2.00
-NOBS= 87 NNODESmax= 99
-NPRI= 154 (#priors used)
-(Range of Wij. If 1 then -1 =< Wij =< 1)
-(weight of the model complexity term in the cost function) (weight of the SSE in the cost function) (#proteomic+phenotypic nodes)
-(Max allowed nodes. = #nodes in the node_index file)
-n_dec=
-NEXPmax= 89 (max #of experiments. =#lines in exp_index file)
-NEXPcg= 30 (conjugate gradient optimization steps. Optional. Not used in the current implementation)
-****************************************************************************
-Box 5. A sample input.txt file
-80 (#models to be generated)
- 2.5. Prio.txt
+
+## Prio.txt
 The PERA generated binary prior informations.
 Format: tab delimited file
 output from PERA fitted to the format required by the BP code.
-Box 4. Sample lines from the prio.txt (prior model) file.
-2.6. Input.txt
-The input file contains the parameters necessary for running the BP-based decimation code. You can copy-paste the below input parameter set (do not include the lines with **) and generate your input parameter set according to your wish.  !!Do not change the format of the input.txt included !!
+
+![sample lines from prio.txt file](/images/box4_prio.png)
+Box 4. Sample lines from the prio.txt (prior model) file
+
+## Input.txt
+The input file contains the parameters necessary for running the BP-based decimation code. 
+You can copy-paste the below input parameter set (do not include the lines with **) and generate your input parameter set according to your wish.  
+**!!Do not change the format of the input.txt included !!**
 ****************************************************************************
-     5
-Perturbation biology/network inference tutorial
-www.sanderlab.org/pertbio
- 3. Execute the code
+NEXPTS= 89 (Number of perturbation conditions)
+NNODES= 99 (Total number of nodes included in calculations)
+NWVALS= 11 (number of Wij values allowed)
+Wijmax= 1.00E+00 (Range of Wij. If 1 then -1 =< Wij =< 1)
+THRESH= 1.00E-06 (Convergence criteria in BP iterations)
+lambda= 5.00 (weight of the model complexity term in the cost function)
+beta= 2.00 (weight of the SSE in the cost function)
+NOBS= 87 (#proteomic+phenotypic nodes)
+NNODESmax= 99 (Max allowed nodes. = #nodes in the node_index file)
+NPRI= 154 (#priors used)
+n_dec= 80 (#models to be generated)
+NEXPmax= 89 (max #of experiments. =#lines in exp_index file)
+NEXPcg= 30 (conjugate gradient optimization steps. Optional. Not used in the current implementation)
+****************************************************************************
+
+![sample lines from input.txt file](/images/box5_input.png)
+Box 5. A sample input.txt file
+
+# Execute the code
 Run the program with the command
+```
+./decima_bp < input.txt > input.out
+```
 Generates an ensemble of model solutions.
- 4. Output files
-4.1. topology_X.txt: Topology of the model solution X. A matrix of NxN (N=#nodes) with matrix
+
+# Output files
+## topology_X.txt
+Topology of the model solution X. A matrix of NxN (N=#nodes) with matrix
 elements 1 (for Wij != 0) and 0 (Wij = 0). i &j are the node indices
-4.2 model_X.txt.  Wij matrix for model solution X .  The NXN matrix for each model solution with values Wij={-1,-0.8....0,...0.8,1.0}. i &j are the node indices.
-4.3.marginals.ent:  The  BP generated probability distribution for every interaction in the system.
-     Box 6. A sample from the marginals.ent (BP-generated P(wij)) file.
-4.4.Temp_marginals.txt  This is a temporary marginal distribution file that provides a snapshot the probability distribution of Wij (P(Wij)) during the progression of the BP-decimation rounds. The first column is the index of the upstream node, the next column is the index of the downstream. Columns 3-13 gives the P(Wij) for Wij range {-1,1} with increments of 0.2. The last column is the number of BP steps currently performed in a decimation round. For example if you have 100 nodes and interactions between all nodes are allowed you will run 10000 (100x100) BP calculations for each decimation round. Remember that each decimation round generates a single model solution.
+
+## model_X.txt
+Wij matrix for model solution X .  The NXN matrix for each model solution with values Wij={-1,-0.8....0,...0.8,1.0}. i &j are the node indices.
+
+## marginals.ent
+The  BP generated probability distribution for every interaction in the system.
+     
+![sample lines from marginals.ent file](/images/box6_marginals.png)
+Box 6. A sample from the marginals.ent (BP-generated P(wij)) file.
+
+## Temp_marginals.txt
+This is a temporary marginal distribution file that provides a snapshot the probability distribution of Wij (P(Wij)) during the progression of the BP-decimation rounds. The first column is the index of the upstream node, the next column is the index of the downstream. Columns 3-13 gives the P(Wij) for Wij range {-1,1} with increments of 0.2. The last column is the number of BP steps currently performed in a decimation round. For example if you have 100 nodes and interactions between all nodes are allowed you will run 10000 (100x100) BP calculations for each decimation round. Remember that each decimation round generates a single model solution.
+
+![sample lines from temporary marginal distribution](/images/box7_temporary_marginal.png)
 Box 7. Sample from a temporary marginal distribution file (temp_marginals.txt).
-     6
-Average model is the average of the Wij values over all (or selected) number of model solutions. The program does not output the average model, you can compute yourself or email akorkut@cbio.mskcc.org to obtain a copy of the script. In the average models, the Wij values are normalized with respect to the maximum value of the average Wij (<wij>) over all i & j’s in all model solutions. If the max <Wij> is 0.93 as in the SkMel133 models, an average wij that equals to 0.186 will be normalized as 0.186/0.93=0.2.   In the average model, t he strong edges (e.g., <Wij> >0.8) are frequently captured in model solutions and have high Wij values. On the other hand weak edges (~0.20) have low interaction strengths and/or represented in the small fraction ofthemodels. InKorkutetal.wereportedthe<wij>withthecut-offvalueof0.20(0.186before normalization with respect to max Wij). Feel free to use any value you like if you want to visualize weaker or stronger interactions. I do not recommend using a very low cut-off as you may start analyzing noise.  Most importantly, remember that the average model is not an executable model and it is only for visualisation purposes .
-6. Execute models w/ in silico perturbations
+
+# Average model
+Average model is the average of the Wij values over all (or selected) number of model solutions. The program does not output the average model, you can compute yourself or email akorkut@cbio.mskcc.org to obtain a copy of the script. In the average models, the Wij values are normalized with respect to the maximum value of the average Wij (<wij>) over all i & j’s in all model solutions. If the max <Wij> is 0.93 as in the SkMel133 models, an average wij that equals to 0.186 will be normalized as 0.186/0.93=0.2.   In the average model, t he strong edges (e.g., <Wij> >0.8) are frequently captured in model solutions and have high Wij values. On the other hand weak edges (~0.20) have low interaction strengths and/or represented in the small fraction ofthemodels. InKorkutetal.wereportedthe<wij>withthecut-offvalueof0.20(0.186before normalization with respect to max Wij). Feel free to use any value you like if you want to visualize weaker or stronger interactions. I do not recommend using a very low cut-off as you may start analyzing noise.  
+**Most importantly, remember that the average model is not an executable model and it is only for visualisation purposes.**
+
+# Execute models w/ in silico perturbations
 Network models are executed with specific in silico perturbations until all system variables {xi} reach steady state. The perturbations acting on node, i, are exerted as real-valued, ui, vectors in model Equation 1.
+![repeat of equation](/images/equation1.png)
 See Korkut et al, 2015 for details of the equation. We used the DLSODE integration method (ODEPACK) (Hindmarsh, 1993) settings , MF = 10, ATOL = 1e-10, RTOL = 1e-20). You can use a simulation method of your own choice. However, there are few technical issues we need to consider before executing the models. Please contact Anil Korkut for the simulation code.
 The u vector represents the in silico perturbations. We choose a u vector to quantify the strength of the vectors. For example you can calculate the strength of the u vector for inhibiting the activity node by %50 (i.e., have a value of -1 in log2 space).
-6A.The Wij values.  The edge strengths (wij) between all nodes for each model are inferred and stored in model_X.txt files. X is the index of the model solution.
-Perturbation biology/network inference tutorial
-www.sanderlab.org/pertbio
- 5. Average model
-  7
-Perturbation biology/network inference tutorial
-www.sanderlab.org/pertbio
-6B. Estimation of 𝛆 and 𝛂.  The 𝛆 and 𝛂 are inferred based on the the dynamic range of each proteomic measurement sampled in the biological dataset. The gamma.txt file is one of the outputs of the network inference and gives the 𝛂/𝛆 ratio. In calculations we take 𝛂 = 1, therefore the 𝛆 for each mode equals to the 1/𝛆 for each node.
-6C. Reaching the steady state.  In simulations you must check whether the trajectory reaches to steady state. In our experience, it does in most cases. However, in few cases, an oscillatory behaviour is observed.
-6D. Uniform scaling to avoid systematic errors due to network discontinuity (OPTIONAL):
+
+## The Wij values  
+The edge strengths (wij) between all nodes for each model are inferred and stored in model_X.txt files. X is the index of the model solution.
+
+## Estimation of 𝛆 and 𝛂
+The 𝛆 and 𝛂 are inferred based on the the dynamic range of each proteomic measurement sampled in the biological dataset. The gamma.txt file is one of the outputs of the network inference and gives the 𝛂/𝛆 ratio. In calculations we take 𝛂 = 1, therefore the 𝛆 for each mode equals to the 1/𝛆 for each node.
+
+## Reaching the steady state  
+In simulations you must check whether the trajectory reaches to steady state. In our experience, it does in most cases. However, in few cases, an oscillatory behaviour is observed.
+
+## Uniform scaling to avoid systematic errors due to network discontinuity (OPTIONAL):
 A uniform scaling is applied to simulation results to avoid the systematic errors in models that arise due to lack of some edges in individual model solutions. Missing edges in individual solutions lead to disruption of the flow in the network models and cause an artificial down-prediction of drug responses.
 Solution: A uniform scaling of the data that takes into account the systematic down-prediction. Procedure:
--Build models with data.
--Simulate the models to recapitulate the underlying data.
--Compute the overall standard deviation of the “recapitulated/simulated data”.
-- Generate the uniform scaling factor to correct for the systematic down-prediction. Scaling factor is the ratio of the standard deviation of the actual data and the simulated data.
+* Build models with data.
+* Simulate the models to recapitulate the underlying data.
+* Compute the overall standard deviation of the “recapitulated/simulated data”.
+* Generate the uniform scaling factor to correct for the systematic down-prediction. Scaling factor is the ratio of the standard deviation of the actual data and the simulated data.
+
 For the SkMel133 data, the scaling factor is computed as 1.4. As default, you may use the same value or re-compute a new scaling factor based on your data.
-Important Note: This optional step of uniform scaling does not alter the rank of the predictions (therefore has no effect on the biological interpretation). It also does not alter the correlation coefficient in cross validations s in Figure 3 of Korkut et al.
-7. Cross validation (optional)
+
+**Important Note: This optional step of uniform scaling does not alter the rank of the predictions (therefore has no effect on the biological interpretation). It also does not alter the correlation coefficient in cross validations s in Figure 3 of Korkut et al.**
+
+# Cross validation (optional)
 To test the predictive power of the network models, you can follow a cross-validation scheme as in in figure 3 of Korkut et al, 2015 paper ( http://elifesciences.org/content/4/e04640v1/figure3 ) . You can test the impact of different variables (prior information, choice of optimization parameters, data sets etc) on the predictive power. I suggest to use the same uniform scaling as in 6C. Alternatively, you can generate a separate scaling factor for each calculation or simply do not apply any uniform scaling. Such scaling will not affect the resulting cross correlations for assessment of the predictive power. In our case, we used the same scaling factor computed in 6D.
-  8
-Perturbation biology/network inference tutorial
-www.sanderlab.org/pertbio
-      Box 8. The exp_index.txt for cross-validation with 901 (MEKi) condition.
-9
+
+![sample lines from cross-validation](/images/box8_crossvalidation.png)
+Box 8. The exp_index.txt for cross-validation with 901 (MEKi) condition.
