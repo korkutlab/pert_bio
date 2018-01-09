@@ -65,7 +65,7 @@ gfortran decima_pp.f -o decima_bp
 # Prepare the input files
 ## node_index.txt
 The list of the proteomic and phenotypic nodes, their inclusion in the models and node types.
-Format: 11 characters, tab, integer, tab, integer
+Format: word, tab, integer, tab, integer
 Column 1: List of nodes included in the modeling
 The protein node names are structured as
 Node name (preferably gene name or a protein name) PTM type (phoshorylation/cleavege etc)
